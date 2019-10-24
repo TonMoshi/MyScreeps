@@ -14,9 +14,7 @@ var roleBuilder = {
         }
 
         if(creep.memory.building) {
-            if (creep.memory.sourceId){
-                creep.memory.sourceId = null;
-            }
+           
             var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
             if(targets.length) {
                 if(creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
@@ -25,13 +23,11 @@ var roleBuilder = {
             }
         }
         else {
-            var sources = creep.room.find(FIND_SOURCES);
-            if (creep.memory.sourceId  == null){
-                creep.memory.sourceId = Math.floor(Math.random()*(2));
-            }
+            var sources = creep.room.find(FIND_SOURCES);  
+            var source = sources.find(s => s.id == creep.memory.sourceId);          
 
-            if(creep.harvest(sources[creep.memory.sourceId]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[creep.memory.sourceId], {visualizePathStyle: {stroke: '#ffaa00'}});
+            if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
             }
         }
     }

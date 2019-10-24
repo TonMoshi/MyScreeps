@@ -14,20 +14,17 @@ var roleUpgrader = {
         }
 
         if(creep.memory.upgrading) {
-            if (creep.memory.sourceId){
-                creep.memory.sourceId = null;
-            }
+            
             if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#ffffff'}});
             }
         }
         else {            
             var sources = creep.room.find(FIND_SOURCES);
-            if (creep.memory.sourceId  == null){
-                creep.memory.sourceId = Math.floor(Math.random()*(2));
-            }
-            if(creep.harvest(sources[creep.memory.sourceId]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[creep.memory.sourceId], {visualizePathStyle: {stroke: '#ffaa00'}});
+            var source = sources.find(s => s.id == creep.memory.sourceId);
+            
+            if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
             }
         }
     }
