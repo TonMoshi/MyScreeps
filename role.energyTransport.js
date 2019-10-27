@@ -20,9 +20,9 @@ module.exports = {
             var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_EXTENSION ||
-                        structure.structureType == STRUCTURE_SPAWN /*||
-                        (structure.structureType == STRUCTURE_TOWER && structure.energy < structure.energyCapacity*0.75*)*/
-                        ) && structure.energy < structure.energyCapacity;
+                        structure.structureType == STRUCTURE_SPAWN ||
+                        structure.structureType == STRUCTURE_TOWER) 
+                         && structure.energy < structure.energyCapacity;
                 }
             });
             
@@ -50,8 +50,8 @@ module.exports = {
     energyTransport: function(spawn) {
         var newName = 'energyTransport' + Game.time;
         console.log('Spawning new energyTransport: ' + newName);
-        var spawnResult = spawn.spawnCreep([WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], newName,
-        {memory: {role: 'energyTransport'}});//WORK(2x100)+CARRY(6x50)+MOVE(4x50) = 700 ENERGY
+        var spawnResult = spawn.spawnCreep([WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], newName,
+        {memory: {role: 'energyTransport'}});//WORK(4x100)+CARRY(6x50)+MOVE(4x50) = 900 ENERGY
         if (spawnResult == 0){
             spawn.memory.actualTransport += 1;
             //Game.creeps[newName].memory.sourceId = checkWorkers(spawn);

@@ -42,18 +42,20 @@ module.exports.loop = function () {
     }
     
 
-    var towers = _.filter(Game.structures, (structure) => structure.structureType == STRUCTURE_TOWER);
+    //var towers = _.filter(Game.structures, (structure) => structure.structureType == STRUCTURE_TOWER);
     
     var tower = Game.getObjectById('5db228b94779dc1b246b2019');
 
     if (tower){
 
+        /*
         var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
             filter: (structure) => structure.hits < structure.hitsMax && structure.structureType !=  STRUCTURE_ROAD
         });
         if(closestDamagedStructure) {
             tower.repair(closestDamagedStructure);
         }
+        */
 
         var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if(closestHostile) {
@@ -68,8 +70,30 @@ module.exports.loop = function () {
             if(creep.memory.role == 'energyGrinder') {
                 roleEnergyGrinder.run(creep);
             }
-            if(creep.memory.role == 'energyTransport') {
+            else if(creep.memory.role == 'energyTransport') {
                 roleEnergyTransport.run(creep);    
+            }
+
+            else if(creep.memory.role == 'harvester') {
+                if(creep.carry.energy < creep.carryCapacity) {
+                    var source = creep.room.find(FIND_SOURCES)[1];
+                    if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(source, {reusePath: 50}, {visualizePathStyle: {stroke: '#ffaa00'}});
+                    }
+                } else {
+                    var targets = creep.room.find(FIND_STRUCTURES, {
+                        filter: (structure) => {
+                            return (structure.structureType == STRUCTURE_EXTENSION ||
+                                structure.structureType == STRUCTURE_SPAWN ) && structure.energy < structure.energyCapacity;
+                        }
+                    });
+                    
+                    if (targets.length > 0) {  
+                        if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                        }
+                    }
+                }               
             }
         }        
     }
