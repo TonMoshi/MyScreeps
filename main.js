@@ -1,8 +1,8 @@
-var roleHarvester = require('role.harvester');
-var roleUpgrader = require('role.upgrader');
-var roleBuilder = require('role.builder');
+var roleEnergyGrinder = require('role.energyGrinder');
+var roleEnergyTransport = require('role.energyTransport');
 
 var mapOrganizer = require('map.organizer');
+
 
 module.exports.loop = function () {
 
@@ -18,84 +18,38 @@ module.exports.loop = function () {
     // ORDERS TO CREEPS AND MEMORY CLEANING
     for(var name in Memory.creeps) {
         if(!Game.creeps[name]) {
-            spawn.memory.sourceList[Memory.creeps[name].sourceIndex].working -= 1;
-            spawn.memory.actualWorkers -= 1;
+            if (Memory.creeps[name].role == "energyGrinder") {
+                spawn.memory.actualGrinders -= 1;
+                spawn.memory.sourceList[Memory.creeps[name].sourceIndex].working -= 1;
+            } else if (Memory.creeps[name].role == "energyTransport") {
+                spawn.memory.actualTransport -= 1;
+            }
+            
             delete Memory.creeps[name];
             console.log('Clearing non-existing creep memory:', name);
-        } else {
-            var creep = Game.creeps[name];
-            if(creep.carry.energy < creep.carryCapacity) {
-                var sources = creep.room.find(FIND_SOURCES);
-                if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sources[0]);
-                }
-            }
-            else {
-                if(creep.transfer(spawn, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(spawn);
-                }
-            }
-        }
-        
+        }        
+    }
+    
+    
+    if (spawn.room.energyAvailable >= 700  && !spawn.spawning) {
+
+        if(spawn.memory.actualGrinders < spawn.memory.totalGrinders /*&& spawn.memory.actualGrinders <= spawn.memory.actualTransport*/) {
+            roleEnergyGrinder.energyGrinder(spawn);
+        }    
+        else if(spawn.memory.actualTransport < spawn.memory.totalTransport && spawn.memory.actualTransport <= (spawn.memory.actualGrinders*3)) {
+            roleEnergyTransport.energyTransport(spawn);
+        } 
     }
     
 
-    if (spawn.room.energyAvailable >= 500  && !spawn.spawning) {
+    var towers = _.filter(Game.structures, (structure) => structure.structureType == STRUCTURE_TOWER);
+    
+    var tower = Game.getObjectById('5db228b94779dc1b246b2019');
 
-        var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
-        var upgrader = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
-        var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
+    if (tower){
 
-
-              
-        if(upgrader.length < Math.floor(spawn.memory.totalWorkers/4) && spawn.memory.actualWorkers < spawn.memory.totalWorkers) {
-            var newName = 'Upgrader' + Game.time;
-            console.log('Spawning new upgrader: ' + newName);
-            var spawnResult = spawn.spawnCreep([WORK,WORK,WORK,CARRY,MOVE,MOVE,MOVE], newName,
-                {memory: {role: 'upgrader'}});
-            if (spawnResult == 0) {
-                spawn.memory.actualWorkers += 1;
-                Game.creeps[newName].memory.sourceId = checkWorkers(spawn);
-                Game.creeps[newName].memory.sourceIndex = spawn.memory.sourceList.findIndex(s => s.sourceId == Game.creeps[newName].memory.sourceId);
-                Game.creeps[newName].memory.harvesting = true;
-            }
-            
-        }    
-        else if(harvesters.length < Math.floor(spawn.memory.totalWorkers + 1) && spawn.memory.actualWorkers < spawn.memory.totalWorkers + 2) {
-            var newName = 'Harvester' + Game.time;
-            console.log('Spawning new harvester: ' + newName);
-            var spawnResult = spawn.spawnCreep([WORK,WORK,WORK,CARRY,MOVE,MOVE,MOVE], newName,
-                {memory: {role: 'harvester'}});
-            if (spawnResult == 0) {
-                spawn.memory.actualWorkers += 1;
-                Game.creeps[newName].memory.sourceId = checkWorkers(spawn);
-                Game.creeps[newName].memory.sourceIndex = spawn.memory.sourceList.findIndex(s => s.sourceId == Game.creeps[newName].memory.sourceId);
-                Game.creeps[newName].memory.harvesting = true;
-            }
-        }  
-        /*
-        else if(builders.length < Math.floor(spawn.memory.totalWorkers/4) && spawn.memory.actualWorkers < spawn.memory.totalWorkers) {
-            var newName = 'Builder' + Game.time;
-            console.log('Spawning new builder: ' + newName);
-            var spawnResult = spawn.spawnCreep([WORK,WORK,WORK,CARRY,MOVE,MOVE,MOVE], newName,
-                {memory: {role: 'builder'}});
-            if (spawnResult == 0) {
-                spawn.memory.actualWorkers += 1;
-                Game.creeps[newName].memory.sourceId = checkWorkers(spawn);
-                Game.creeps[newName].memory.sourceIndex = spawn.memory.sourceList.findIndex(s => s.sourceId == Game.creeps[newName].memory.sourceId);
-                Game.creeps[newName].memory.harvesting = true;
-            }
-        }
-        */
-
-    }
-
-
-    /*
-    var tower = Game.getObjectById('TOWER_ID');
-    if(tower) {
         var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (structure) => structure.hits < structure.hitsMax
+            filter: (structure) => structure.hits < structure.hitsMax && structure.structureType !=  STRUCTURE_ROAD
         });
         if(closestDamagedStructure) {
             tower.repair(closestDamagedStructure);
@@ -106,9 +60,21 @@ module.exports.loop = function () {
             tower.attack(closestHostile);
         }
     }
-    */
 
-    
+
+    for(var name in Game.creeps) {
+        var creep = Game.creeps[name];
+        if (!creep.spawning){
+            if(creep.memory.role == 'energyGrinder') {
+                roleEnergyGrinder.run(creep);
+            }
+            if(creep.memory.role == 'energyTransport') {
+                roleEnergyTransport.run(creep);    
+            }
+        }        
+    }
+
+    // VISUALS
     if(spawn.spawning) {
         var spawningCreep = Game.creeps[spawn.spawning.name];
         spawn.room.visual.text(
@@ -117,45 +83,7 @@ module.exports.loop = function () {
             spawn.pos.y,
             {align: 'left', opacity: 0.8});
     }
-
-    for(var name in Game.creeps) {
-        var creep = Game.creeps[name];
-        if(creep.memory.role == 'harvester') {
-            roleHarvester.run(creep);
-            //roleBuilder.run(creep);
-        }
-        if(creep.memory.role == 'upgrader') {
-            roleUpgrader.run(creep);
-            //roleHarvester.run(creep);
-
-        }
-        if(creep.memory.role == 'builder') {
-            roleBuilder.run(creep);
-            //roleHarvester.run(creep);
-        }
-    }
     
 } 
+    
 
-
-
-
-/** @param {Spawn} spawn **/
-function checkWorkers(spawn){
-    //console.log("spawn: "+spawn);
-    let sourceId = "5bbcab2c9099fc012e633058";
-    let sourceList = spawn.memory.sourceList;
-    for(source in sourceList){
-        //console.log("source: "+source);
-        if (sourceList[source].working < (sourceList[source].workers + 1)) {
-            sourceList[source].working += 1;
-            sourceId = sourceList[source].sourceId;
-            break;
-        }
-    }
-    //console.log("SourceId: "+sourceId);
-
-    return sourceId;
-}
-
-//Memory.creeps.filter(s => s.sourceId == source.id).length
