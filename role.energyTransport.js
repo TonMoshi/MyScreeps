@@ -50,8 +50,8 @@ module.exports = {
     energyTransport: function(spawn) {
         var newName = 'energyTransport' + Game.time;
         console.log('Spawning new energyTransport: ' + newName);
-        var spawnResult = spawn.spawnCreep([WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE], newName,
-        {memory: {role: 'energyTransport'}});//WORK(4x100)+CARRY(6x50)+MOVE(4x50) = 900 ENERGY
+        var spawnResult = spawn.spawnCreep([WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE], newName,
+        {memory: {role: 'energyTransport'}});//WORK(4x100)+CARRY(6x50)+MOVE(5x50) = 950 ENERGY
         if (spawnResult == 0){
             spawn.memory.actualTransport += 1;
             //Game.creeps[newName].memory.sourceId = checkWorkers(spawn);
