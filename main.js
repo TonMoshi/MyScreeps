@@ -42,15 +42,36 @@ module.exports.loop = function () {
     }
     
 
-    //var towers = _.filter(Game.structures, (structure) => structure.structureType == STRUCTURE_TOWER);
+    var towers = _.filter(Game.structures, (structure) => structure.structureType == STRUCTURE_TOWER);
     
+    
+    for(var index = 0; index < towers.length; index++) {
+
+        var closestDamagedStructure = towers[index].pos.findClosestByRange(FIND_STRUCTURES, {
+            filter: (structure) => structure.structureType == STRUCTURE_WALL && structure.hits < 150000/*structure.hitsMax*/
+        });
+        if(closestDamagedStructure) {
+            towers[index].repair(closestDamagedStructure);
+        }
+        
+
+        var closestHostile = towers[index].pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+        if(closestHostile) {
+            towers[index].attack(closestHostile);
+        }
+
+    }
+
+    
+    
+    /*
     var tower = Game.getObjectById('5db228b94779dc1b246b2019');
 
     if (tower){
 
         
         var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (structure) => structure.structureType == STRUCTURE_WALL && structure.hits < 150000/*structure.hitsMax*/
+            filter: (structure) => structure.structureType == STRUCTURE_WALL && structure.hits < 150000
         });
         if(closestDamagedStructure) {
             tower.repair(closestDamagedStructure);
@@ -62,7 +83,7 @@ module.exports.loop = function () {
             tower.attack(closestHostile);
         }
     }
-
+*/
 
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
