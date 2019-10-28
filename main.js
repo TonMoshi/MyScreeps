@@ -48,14 +48,14 @@ module.exports.loop = function () {
 
     if (tower){
 
-        /*
+        
         var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (structure) => structure.hits < structure.hitsMax && structure.structureType !=  STRUCTURE_ROAD
+            filter: (structure) => structure.hits < 150000/*structure.hitsMax*/ && structure.structureType !=  STRUCTURE_ROAD
         });
         if(closestDamagedStructure) {
             tower.repair(closestDamagedStructure);
         }
-        */
+        
 
         var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if(closestHostile) {
