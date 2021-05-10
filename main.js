@@ -1,5 +1,6 @@
-var roleInitialCreep = require('role.initial.creep');
-var mapOrganizer = require('map.organizer');
+const roleInitialCreep = require('role.initial.creep');
+const roleUpgrader = require('role.upgrader');
+const mapOrganizer = require('map.organizer');
 
 
 module.exports.loop = function () { 
@@ -21,7 +22,7 @@ module.exports.loop = function () {
         }        
     }
 
-    if ( spawn.room.energyAvailable >= 300  &&  !spawn.spawning) {
+    if ( spawn.room.energyAvailable >= 300  &&  !spawn.spawning && spawn.memory.actualGrinders < spawn.memory.totalGrinders) {
 
         roleInitialCreep.initialCreep(spawn);
 

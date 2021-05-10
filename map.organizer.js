@@ -27,7 +27,7 @@ var mapOrganizer = {
 
         spawn.memory.sourceList = sourceList;
         //spawn.memory.totalGrinders = totalGrinders; CHANGE TO GET TOTAL Grinders == NUMBER OF HARVEST SITES
-        spawn.memory.totalGrinders = sources.length;
+        spawn.memory.totalGrinders = sources.length * 3; // TODO: CHange this again to sources.length
         spawn.memory.actualGrinders = 0;
         spawn.memory.totalTransport = spawn.memory.totalGrinders*3;
         spawn.memory.actualTransport = 0;
