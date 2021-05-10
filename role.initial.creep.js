@@ -64,6 +64,27 @@ const roleInitial =  {
         }        
     }
 
+};
+
+/** @param {Spawn} spawn **/
+function checkWorkers(spawn){
+    //console.log("spawn: "+spawn);
+    let sourceId = "5bbcab2c9099fc012e633058";
+    let sourceList = spawn.memory.sourceList;
+    
+    for(source in sourceList){
+        //console.log("source: "+source);
+        //if (sourceList[source].working < (sourceList[source].workers)) {
+        if (sourceList[source].working < 1) {
+            sourceList[source].working += 1;
+            sourceId = sourceList[source].sourceId;
+            break;
+        }
+    }
+    
+    //console.log("SourceId: "+sourceId);
+
+    return sourceId;
 }
 
 module.exports = roleInitial;
