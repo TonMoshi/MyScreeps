@@ -19,7 +19,6 @@ module.exports = {
         } else {
             creep.drop( RESOURCE_ENERGY, 50);
         }
-         
 
     },
 

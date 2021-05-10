@@ -11,7 +11,7 @@ var mapOrganizer = {
 
         var roomTerrain = Game.map.getRoomTerrain("E49N43");
 
-        for( source in sources )
+        sources.foreach( source =>
         {
             var sourcelet = {};
             sourcelet.sourceId = sources[source].id;
@@ -20,7 +20,7 @@ var mapOrganizer = {
             totalGrinders += sourcelet.Grinders;
             //sourcelet.working = 0;
             sourceList.push(sourcelet);
-        }
+        } );
 
         spawn.memory.sourceList = sourceList;
         //spawn.memory.totalGrinders = totalGrinders; CHANGE TO GET TOTAL Grinders == NUMBER OF HARVEST SITES

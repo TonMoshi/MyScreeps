@@ -5,8 +5,7 @@ const roleInitial =  {
 
         if (creep.carry.energy < creep.carryCapacity && creep.memory.harvesting) {
             var source = creep.room.find(FIND_SOURCES, {
-                filter: { id: creep.memory.sourceId }
-                
+                filter: { id: creep.memory.sourceId }     
             })[0];
 
             if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
@@ -69,7 +68,7 @@ const roleInitial =  {
 /** @param {Spawn} spawn **/
 function checkWorkers(spawn){
     //console.log("spawn: "+spawn);
-    let sourceId = "5bbcab2c9099fc012e633058";
+    let sourceId = "5bbcafed9099fc012e63b644";
     let sourceList = spawn.memory.sourceList;
     
     for(source in sourceList){
