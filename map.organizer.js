@@ -4,7 +4,7 @@ var mapOrganizer = {
     /** @param {Spawn} spawn **/
     run: function(spawn) {
 
-        var sources = spawn.room.find(FIND_SOURCES);
+        const sources = spawn.room.find(FIND_SOURCES);
 
         var sourceList = [];  
         var totalGrinders = 0;     
@@ -12,11 +12,11 @@ var mapOrganizer = {
         var roomTerrain = Game.map.getRoomTerrain("E49N43");
 
         if (sources.length) {
-            sources.foreach( source =>
+            sources.forEach( source =>
                 {
                     var sourcelet = {};
-                    sourcelet.sourceId = sources[source].id;
-                    sourcelet.workPositions = checkFreeArea(sources[source].pos.x, sources[source].pos.y, roomTerrain);
+                    sourcelet.sourceId = source.id;
+                    sourcelet.workPositions = checkFreeArea(source.pos.x, source.pos.y, roomTerrain);
                     sourcelet.Grinders = sourcelet.workPositions.length;
                     totalGrinders += sourcelet.Grinders;
                     //sourcelet.working = 0;
