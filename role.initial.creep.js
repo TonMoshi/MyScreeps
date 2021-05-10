@@ -13,7 +13,7 @@ const roleInitial =  {
                 creep.moveTo(source, {reusePath: 50}, {visualizePathStyle: {stroke: '#ffaa00'}});
             }
         } else {
-            
+
             creep.memory.harvesting = false;
             var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
@@ -48,6 +48,20 @@ const roleInitial =  {
                 creep.memory.harvesting = true;
             }
         }
+    },
+
+    /** @param {Spawn} spawn*/
+    initialCreep: function(spawn) {
+        var newName = 'initialCreep' + Game.time;
+        console.log('Spawning new initialCreep: ' + newName);
+        var spawnResult = spawn.spawnCreep([WORK,WORK,WORK,WORK,WORK,CARRY,MOVE], newName,
+        {memory: {role: 'initialCreep'}});//100+100+100+100+100+50+50 = 600
+        if (spawnResult == 0){
+            spawn.memory.actualGrinders += 1;
+            Game.creeps[newName].memory.sourceId = checkWorkers(spawn);
+            Game.creeps[newName].memory.sourceIndex = spawn.memory.sourceList.findIndex(s => s.sourceId == Game.creeps[newName].memory.sourceId);
+            Game.creeps[newName].memory.harvesting = true;
+        }        
     }
 
 }
