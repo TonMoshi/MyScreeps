@@ -54,8 +54,8 @@ const roleInitial =  {
     initialCreep: function(spawn) {
         var newName = 'initialCreep' + Game.time;
         console.log('Spawning new initialCreep: ' + newName);
-        var spawnResult = spawn.spawnCreep([WORK,WORK,WORK,WORK,WORK,CARRY,MOVE], newName,
-        {memory: {role: 'initialCreep'}});//100+100+100+100+100+50+50 = 600
+        var spawnResult = spawn.spawnCreep([WORK,CARRY,MOVE], newName,
+        {memory: {role: 'initialCreep'}});//100+100+100 = 300
         if (spawnResult == 0){
             spawn.memory.actualGrinders += 1;
             Game.creeps[newName].memory.sourceId = checkWorkers(spawn);

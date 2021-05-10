@@ -21,7 +21,7 @@ module.exports.loop = function () {
         }        
     }
 
-    if ( /*spawn.room.energyAvailable >= 700  && */ !spawn.spawning) {
+    if ( spawn.room.energyAvailable >= 300  &&  !spawn.spawning) {
 
         roleInitialCreep.initialCreep(spawn);
 
