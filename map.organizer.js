@@ -11,16 +11,19 @@ var mapOrganizer = {
 
         var roomTerrain = Game.map.getRoomTerrain("E49N43");
 
-        sources.foreach( source =>
-        {
-            var sourcelet = {};
-            sourcelet.sourceId = sources[source].id;
-            sourcelet.workPositions = checkFreeArea(sources[source].pos.x, sources[source].pos.y, roomTerrain);
-            sourcelet.Grinders = sourcelet.workPositions.length;
-            totalGrinders += sourcelet.Grinders;
-            //sourcelet.working = 0;
-            sourceList.push(sourcelet);
-        } );
+        if (sources.length) {
+            sources.foreach( source =>
+                {
+                    var sourcelet = {};
+                    sourcelet.sourceId = sources[source].id;
+                    sourcelet.workPositions = checkFreeArea(sources[source].pos.x, sources[source].pos.y, roomTerrain);
+                    sourcelet.Grinders = sourcelet.workPositions.length;
+                    totalGrinders += sourcelet.Grinders;
+                    //sourcelet.working = 0;
+                    sourceList.push(sourcelet);
+                } );
+        }
+
 
         spawn.memory.sourceList = sourceList;
         //spawn.memory.totalGrinders = totalGrinders; CHANGE TO GET TOTAL Grinders == NUMBER OF HARVEST SITES
