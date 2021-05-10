@@ -23,7 +23,7 @@ module.exports.loop = function () {
 
     if ( /*spawn.room.energyAvailable >= 700  && */ !spawn.spawning) {
 
-        roleInitialCreep.actualInitialCreeps(spawn);
+        roleInitialCreep.initialCreep(spawn);
 
         // if(spawn.memory.actualGrinders < spawn.memory.totalGrinders /*&& spawn.memory.actualGrinders <= spawn.memory.actualTransport*/) {
         //     roleEnergyGrinder.energyGrinder(spawn);
