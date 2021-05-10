@@ -9,7 +9,7 @@ var mapOrganizer = {
         var sourceList = [];  
         var totalGrinders = 0;     
 
-        var roomTerrain = Game.map.getRoomTerrain("W33S23");
+        var roomTerrain = Game.map.getRoomTerrain("E49N43");
 
         for( source in sources )
         {
