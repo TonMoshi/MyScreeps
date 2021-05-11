@@ -9,7 +9,7 @@ var mapOrganizer = {
         let sourceList = [];  
         let totalGrinders = 0;     
 
-        let roomTerrain = Game.map.getRoomTerrain("E49N43");
+        let roomTerrain = Game.map.getRoomTerrain(spawn.room.name);
 
         if (sources.length) {
             sources.forEach( source =>
@@ -42,6 +42,8 @@ module.exports = mapOrganizer;
 function checkFreeArea(x,y,roomTerrain){
     var freePos = [];
 
+    const checkSwampOrPlain = (terrain) => terrain === 0 || terrain === 2;
+
     /**
      *  x-1,y-1     x,y-1   x+1,y-1
      *  x-1,y       x,y     x+1,y
@@ -49,23 +51,23 @@ function checkFreeArea(x,y,roomTerrain){
      */
     
     // x-1,y-1
-    if(!roomTerrain.get(x-1,y-1)) freePos.push({"x":x-1, "y":y-1});
+    if(checkSwampOrPlain(roomTerrain.get(x-1,y-1))) freePos.push({"x":x-1, "y":y-1});
     // x,y-1
-    if(!roomTerrain.get(x,y-1)) freePos.push({"x":x, "y":y-1});
+    if(checkSwampOrPlain(roomTerrain.get(x,y-1))) freePos.push({"x":x, "y":y-1});
     // x+1,y-1
-    if(!roomTerrain.get(x+1,y-1)) freePos.push({"x":x+1, "y":y-1});
+    if(checkSwampOrPlain(roomTerrain.get(x+1,y-1))) freePos.push({"x":x+1, "y":y-1});
 
     // x-1,y
-    if(!roomTerrain.get(x-1,y)) freePos.push({"x":x-1, "y":y});
+    if(checkSwampOrPlain(roomTerrain.get(x-1,y))) freePos.push({"x":x-1, "y":y});
     // x+1,y
-    if(!roomTerrain.get(x+1,y)) freePos.push({"x":x+1, "y":y});
+    if(checkSwampOrPlain(roomTerrain.get(x+1,y))) freePos.push({"x":x+1, "y":y});
 
     // x-1,y+1
-    if(!roomTerrain.get(x-1,y+1)) freePos.push({"x":x-1, "y":y+1});
+    if(checkSwampOrPlain(roomTerrain.get(x-1,y+1))) freePos.push({"x":x-1, "y":y+1});
     // x,y+1
-    if(!roomTerrain.get(x,y+1)) freePos.push({"x":x, "y":y+1});
+    if(checkSwampOrPlain(roomTerrain.get(x,y+1))) freePos.push({"x":x, "y":y+1});
     // x+1,y+1
-    if(!roomTerrain.get(x+1,y+1)) freePos.push({"x":x+1, "y":y+1});
+    if(checkSwampOrPlain(roomTerrain.get(x+1,y+1))) freePos.push({"x":x+1, "y":y+1});
 
     return freePos;
 }
