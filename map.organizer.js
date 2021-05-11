@@ -6,20 +6,20 @@ var mapOrganizer = {
 
         const sources = spawn.room.find(FIND_SOURCES);
 
-        var sourceList = [];  
-        var totalGrinders = 0;     
+        let sourceList = [];  
+        let totalGrinders = 0;     
 
-        var roomTerrain = Game.map.getRoomTerrain("E49N43");
+        let roomTerrain = Game.map.getRoomTerrain("E49N43");
 
         if (sources.length) {
             sources.forEach( source =>
                 {
-                    var sourcelet = {};
+                    let sourcelet = {};
                     sourcelet.sourceId = source.id;
                     sourcelet.workPositions = checkFreeArea(source.pos.x, source.pos.y, roomTerrain);
                     sourcelet.Grinders = sourcelet.workPositions.length;
                     totalGrinders += sourcelet.Grinders;
-                    //sourcelet.working = 0;
+                    sourcelet.working = 0;
                     sourceList.push(sourcelet);
                 } );
         }
@@ -29,7 +29,7 @@ var mapOrganizer = {
         //spawn.memory.totalGrinders = totalGrinders; CHANGE TO GET TOTAL Grinders == NUMBER OF HARVEST SITES
         spawn.memory.totalGrinders = sources.length * 3; // TODO: CHange this again to sources.length
         spawn.memory.actualGrinders = 0;
-        spawn.memory.totalTransport = spawn.memory.totalGrinders*3;
+        spawn.memory.totalTransport = spawn.memory.totalGrinders * 3;
         spawn.memory.actualTransport = 0;
 
     }   

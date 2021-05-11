@@ -74,7 +74,7 @@ function checkWorkers(spawn){
     for(source in sourceList){
         //console.log("source: "+source);
         //if (sourceList[source].working < (sourceList[source].workers)) {
-        if (sourceList[source].working < 1) {
+        if (sourceList[source].working < sourceList[source].Grinders) {
             sourceList[source].working += 1;
             sourceId = sourceList[source].sourceId;
             break;
